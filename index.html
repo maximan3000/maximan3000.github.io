@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <title>Tic Tac Toe</title>
+   <meta charset="utf-8">
+   <style type="text/css">
+.ping-pong {
+  display: inline-grid;
+  position: relative;
+  grid-template: repeat(3, 50px) / repeat(3, 50px);
+  gap: 5px;
+}
+
+.field input {
+  visibility: hidden;
+}
+
+.field {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  background-color: green;
+}
+
+.field label {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: green;
+}
+
+.overlay {
+  z-index: 10;
+}
+
+.value {
+  z-index: 0;
+}
+
+.overlay:has(input:checked) {
+  display: none;
+}
+
+/* Draw cross */
+.cross::before, .value:has(input:checked)::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  content: '';
+  width: calc(100% + 10px);
+  height: 2px;
+  background-color: red;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.cross::after, .value:has(input:checked)::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  content: '';
+  width: calc(100% + 10px);
+  height: 2px;
+  background-color: red;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Draw round */
+.round::before, .value:has(input:not(:checked))::before {
+  position: absolute;
+  content: '';
+  width: calc(100% - 5px);
+  height: calc(100% - 5px);
+  border-radius: 50%;
+  border: 1px solid blue;
+  box-sizing: border-box;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Draw win line */
+.ping-pong::after {
+  display: none;
+  
+  position: absolute;
+  content: '';
+  width: calc(100%);
+  height: 2px;
+  background-color: red;
+  z-index: 20;
+  transform-origin: center;
+  background-color: yellow;
+}
+
+/* Win conditions */
+
+/* 1st horizontal line */
+.ping-pong:not(:has(:is(.field:nth-child(1) > .value > :not(input:checked), .field:nth-child(2) > .value > :not(input:checked), .field:nth-child(3) > .value > :not(input:checked))))::after {
+  display: block;
+  transform: translateY(25px);
+}
+
+/* 2nd horizontal line */
+.ping-pong:not(:has(:is(.field:nth-child(4) > .value > :not(input:checked), .field:nth-child(5) > .value > :not(input:checked), .field:nth-child(6) > .value > :not(input:checked))))::after {
+  display: block;
+  transform: translateY(calc(50px + 25px + 5px));
+}
+
+/* 3rd horizontal line */
+.ping-pong:not(:has(:is(.field:nth-child(7) > .value > :not(input:checked), .field:nth-child(8) > .value > :not(input:checked), .field:nth-child(9) > .value > :not(input:checked))))::after {
+  display: block;
+  transform: translateY(calc(2 * 50px + 25px + 2 * 5px));
+}
+
+/* 1st vertical line */
+.ping-pong:not(:has(:is(.field:nth-child(1) > .value > :not(input:checked), .field:nth-child(4) > .value > :not(input:checked), .field:nth-child(7) > .value > :not(input:checked))))::after {
+  display: block;
+  transform: translate(calc(-50px - 5px), calc(25px + 50px + 5px)) rotate(90deg);
+}
+
+/* 2nd vertical line */
+.ping-pong:not(:has(:is(.field:nth-child(2) > .value > :not(input:checked), .field:nth-child(5) > .value > :not(input:checked), .field:nth-child(8) > .value > :not(input:checked))))::after {
+  display: block;
+  transform: translate(0, calc(25px + 50px + 5px)) rotate(90deg);
+}
+
+/* 3rd vertical line */
+.ping-pong:not(:has(:is(.field:nth-child(3) > .value > :not(input:checked), .field:nth-child(6) > .value > :not(input:checked), .field:nth-child(9) > .value > :not(input:checked))))::after {
+  display: block;
+  transform: translate(calc(50px + 5px), calc(25px + 50px + 5px)) rotate(90deg);
+}
+
+/* top-left to bottom-right line */
+.ping-pong:not(:has(:is(.field:nth-child(1) > .value > :not(input:checked), .field:nth-child(5) > .value > :not(input:checked), .field:nth-child(9) > .value > :not(input:checked))))::after {
+  display: block;
+  transform: translate(0, calc(25px + 50px + 5px)) rotate(45deg);
+}
+
+/* top-right to bottom-left line */
+.ping-pong:not(:has(:is(.field:nth-child(3) > .value > :not(input:checked), .field:nth-child(5) > .value > :not(input:checked), .field:nth-child(7) > .value > :not(input:checked))))::after {
+  display: block;
+  transform: translate(0, calc(25px + 50px + 5px)) rotate(-45deg);
+}
+
+
+
+/* temp */
+
+.f {
+  margin-top: 20px;
+  position: relative;
+}
+
+.f label {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: green;
+}
+
+.f input {
+  display: none;
+}
+
+.cross2 {
+  z-index: 0;
+}
+
+.nought {
+  z-index: 5;
+}
+
+.empty {
+  z-index: 10;
+}
+
+.cross2::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  content: '';
+  width: calc(100% + 10px);
+  height: 2px;
+  background-color: red;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.cross2::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  content: '';
+  width: calc(100% + 10px);
+  height: 2px;
+  background-color: red;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.nought::before {
+  position: absolute;
+  content: '';
+  width: calc(100% - 5px);
+  height: calc(100% - 5px);
+  border-radius: 50%;
+  border: 1px solid blue;
+  box-sizing: border-box;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Hide empty layer conditions */
+.f:not(:has(:is(.empty > input:not(:checked), .cross2 > input:checked))) > .empty,
+.f:not(:has(:is(.empty > input:checked, .cross2 > input:not(:checked)))) > .empty {
+  display: none;
+}
+
+/* Hide nought layer conditions */
+.f:not(:has(:is(.nought > input:not(:checked), .cross2 > input:checked))) > .nought,
+.f:not(:has(:is(.nought > input:checked, .cross2 > input:not(:checked)))) > .nought {
+  display: none;
+}
+
+/*
+Conditions when field is nought
+
+Boolean basis
+:has(:is(A,B)) === A || B
+:not(A) === not A 
+If A is a complex chain selector, like .sel1 > .sel2 + sel3, 
+the rule applies to the last selector in the chain i.e. not(.sel1 > .sel2 + sel3) === .sel1 > .sel2 + :not(sel3)
+
+Need to create selector rule:
+(.empty > input:checked) && (.nought > input:checked)
+
+If:
+A === .empty > input:checked
+B === .nought > input:checked
+
+I need to create rule: A & B
+
+Using boolean (De Morgan's Law)[https://en.wikipedia.org/wiki/De_Morgan%27s_laws]: 
+A & B === not(not(A) || not(B))
+
+1. Replace not(A), not(B)
+not(A) === :not(A) === A1
+not(B) === :not(B) === B1
+
+result: A & B === not(A1 || B1)
+
+2. replace A1 || B1
+A1 || B1 === :is(A1,B1) === C
+
+result: A & B === not(C)
+
+3. replace not(C)
+not(C) === :not(C)
+
+result: A & B === 
+=== :not(C)
+=== :not(:has(:is(A1,B1))) 
+=== :not(:has(:is(:not(A),:not(B))))
+=== :not(:has(:is(.empty > input:not(:checked), .nought > input:not(:checked))))
+*/
+
+/* Conditions when field is nought */
+.f:not(:has(:is(.empty > input:not(:checked), .nought > input:checked))) label,
+.f:not(:has(:is(.empty > input:checked, .nought > input:not(:checked)))) label{
+  border: 5px solid black;
+}
+
+/* Conditions when field is cross */
+.f:not(:has(:is(.nought > input:not(:checked), .cross2 > input:checked))) label,
+.f:not(:has(:is(.nought > input:checked, .cross2 > input:not(:checked)))) label{
+  border: 5px solid brown;
+}
+   </style>
+ </head>
+ <body>
+  
+<div class='ping-pong'>
+  <div class='field'>
+    <label class='overlay'>
+      <input type='checkbox'/>
+    </label>
+    <label class='value'>
+      <input type='checkbox'/>
+    </label>
+  </div>
+  <div class='field'>
+    <label class='overlay'>
+      <input type='checkbox'/>
+    </label>
+    <label class='value'>
+      <input type='checkbox'/>
+    </label>
+  </div>
+  <div class='field'>
+    <label class='overlay'>
+      <input type='checkbox'/>
+    </label>
+    <label class='value'>
+      <input type='checkbox'/>
+    </label>
+  </div>
+  <div class='field'>
+    <label class='overlay'>
+      <input type='checkbox'/>
+    </label>
+    <label class='value'>
+      <input type='checkbox'/>
+    </label>
+  </div>
+  <div class='field'>
+    <label class='overlay'>
+      <input type='checkbox'/>
+    </label>
+    <label class='value'>
+      <input type='checkbox'/>
+    </label>
+  </div>
+  <div class='field'>
+    <label class='overlay'>
+      <input type='checkbox'/>
+    </label>
+    <label class='value'>
+      <input type='checkbox'/>
+    </label>
+  </div>
+  <div class='field'>
+    <label class='overlay'>
+      <input type='checkbox'/>
+    </label>
+    <label class='value'>
+      <input type='checkbox'/>
+    </label>
+  </div>
+  <div class='field'>
+    <label class='overlay'>
+      <input type='checkbox'/>
+    </label>
+    <label class='value'>
+      <input type='checkbox'/>
+    </label>
+  </div>
+  <div class='field'>
+    <label class='overlay'>
+      <input type='checkbox'/>
+    </label>
+    <label class='value'>
+      <input type='checkbox'/>
+    </label>
+  </div>
+</div>
+
+<div class='f'>
+  <label class='cross2'>
+    <input type='checkbox'/>
+  </label>
+  <label class='nought'>
+    <input type='checkbox'/>
+  </label>
+  <label class='empty'>
+    <input type='checkbox'/>
+  </label>
+</div>
+
+ </body> 
+</html>
